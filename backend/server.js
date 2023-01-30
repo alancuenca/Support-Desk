@@ -1,7 +1,12 @@
 const express = require('express');
+const color = require('colors');
 const dotenv = require('dotenv').config();
 const { errorHandler } = require('./middleware/errorMiddleware');
+const connectDB = require('./config/db')
 const PORT = process.env.PORT || 5000;
+
+// Connect to databse
+connectDB();
 
 const app = express();
 
@@ -13,6 +18,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: `Hello from port ${PORT}` })
 });
 
+// Routes
 app.use('/api/users', require('./routes/userRoutes'))
 
 app.use(errorHandler);
