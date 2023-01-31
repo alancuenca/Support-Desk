@@ -20,6 +20,14 @@ function Register() {
         }))
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault()
+
+        if (password !== password2) {
+            toast.error('Passwords do not match')
+        }
+    }
+
     return (
         <>
             <section className="heading">
@@ -39,6 +47,7 @@ function Register() {
                             value={name}
                             onChange={onChange}
                             placeholder="Enter your name"
+                            required
                         />
                     </div>
                     <div className="form-group">
@@ -50,6 +59,7 @@ function Register() {
                             value={email}
                             onChange={onChange}
                             placeholder="Enter your email"
+                            required
                         />
                     </div>
                     <div className="form-group">
@@ -61,17 +71,19 @@ function Register() {
                             value={password}
                             onChange={onChange}
                             placeholder="Create a password"
+                            required
                         />
                     </div>
                     <div className="form-group">
                         <input
-                            type="password2"
+                            type="password"
                             className="form-control"
                             id="password2"
                             name="password2"
                             value={password2}
                             onChange={onChange}
                             placeholder="Re-enter password"
+                            required
                         />
                     </div>
                     <div className="form-group">
