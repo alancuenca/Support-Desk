@@ -19,7 +19,7 @@ function Register() {
 
     const navigate = useNavigate()
 
-    const { user, isLoading, isSuccess, isError, message } = useSelector(state => state.auth)
+    const { user, isLoading, isSuccess, isError, message } = useSelector((state) => state.auth)
 
     useEffect(() => {
         if (isError) {
@@ -30,7 +30,7 @@ function Register() {
             navigate('/')
         }
 
-        dispatch(reset)
+        dispatch(reset())
     }, [isError, isSuccess, user, message, navigate, dispatch])
 
     const onChange = (e) => {
@@ -61,7 +61,7 @@ function Register() {
         <>
             <section className="heading">
                 <h1>
-                    <FaUser /> Register {user}
+                    <FaUser /> Register 
                 </h1>
                 <p>Please create an account</p>
             </section>
