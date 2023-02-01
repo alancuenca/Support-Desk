@@ -8,14 +8,14 @@ const register = async (userData) => {
 
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
-        localStorage.setItem('token', response.data.token)
     }
     return response.data
 };
 
 // Login user
 const login = async (userData) => {
-    const response = await axios.post(`${API_URL}/login}`, userData)
+    const response = await axios.post(`${API_URL}/login`, userData)
+    // console.log(response);
 
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
