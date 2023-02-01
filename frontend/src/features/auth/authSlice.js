@@ -40,7 +40,7 @@ export const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(register.pending, (state) => {
-            state.isLoading = true
+                state.isLoading = true
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false
@@ -56,4 +56,5 @@ export const authSlice = createSlice({
     }
 });
 
+export const { reset } = authSlice.actions
 export default authSlice.reducer
