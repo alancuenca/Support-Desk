@@ -35,7 +35,7 @@ export const ticketSlice = createSlice({
     name: 'ticket',
     initialState,
     reducers: {
-        reset: (state) => initialState
+        reset: (state) => initialState,
     },
     extraReducers: (builder) => {
         builder
