@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import thunk from 'redux-thunk';
 import ticketService from './ticketService'
 
 const initialState = {
@@ -33,13 +32,25 @@ export const createTicket = createAsyncThunk(
 });
 
 export const ticketSlice = createSlice({
-    name: 'ticke',
+    name: 'ticket',
     initialState,
     reducers: {
         reset: (state) => initialState
     },
     extraReducers: (builder) => {
-
+        builder
+            .addCase(createTicket.pending, (state) => {
+            state.isLoading = true
+            })
+            .addCase(createTicket.fulfilled, (state) => {
+                state.isLoading = false
+                state.isSuccess = true
+            })
+            .addCase(createTicket.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
     }
 })
 
