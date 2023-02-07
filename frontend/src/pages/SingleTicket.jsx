@@ -1,13 +1,43 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getSingleTicket, reset, closeTicket } from '../features/tickets/ticketSlice'
+import Modal from 'react-modal'
+import { FaPlus } from 'react-icons/fa'
+import { getSingleTicket, closeTicket } from '../features/tickets/ticketSlice'
+import {
+    getNotes,
+    createNote,
+    reset as notesReset,
+} from '../features/notes/noteSlice'
+import NoteItem from '../components/NoteItem'
 import { useParams, useNavigate } from 'react-router-dom'
 import { BackButton } from '../components/BackButton'
 import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
 
+const customStyle = {
+    content: {
+        width: '600px',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%,-50%)',
+        position: 'relative',
+    },
+};
+
+Modal.setAppElement('#root')
+
 function SingleTicket() {
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    const [noteText, setNoteText] = useState('')
+
     const { ticket, isLoading, isSuccess, isError, message } = useSelector((state) => state.tickets);
+
+    const { notes, isLoading: notesIsLoading } = useSelector((state) => state.notes);
+
 
     const params = useParams();
 
@@ -24,6 +54,9 @@ function SingleTicket() {
         }
 
         dispatch(getSingleTicket(ticketId))
+
+        dispatch(getNotes(ticketId))
+
         // eslint-disable-next-line
     }, [isError, message, ticketId]);
 
@@ -32,13 +65,29 @@ function SingleTicket() {
         dispatch(closeTicket(ticketId))
         toast.success('Ticket Closed')
         navigate('/tickets')
-    }
+    };
 
+    // Note submit
+    const onNoteSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createNote({
+            noteText,
+            ticketId
+        }));
+        closeModal();
+    };
 
-    if (isLoading) {
+    // Open / Close modal
+    const openModal = () => setModalIsOpen(true);
+
+    const closeModal = () => setModalIsOpen(false);
+
+    // Loading
+    if (isLoading || notesIsLoading) {
         return <Spinner />
     };
 
+    // Error Handle
     if (isError) {
         return <h3>Something Went Wrong</h3>
     }
@@ -64,7 +113,46 @@ function SingleTicket() {
                     <h3>Discription of Issue</h3>
                     <p>{ticket.description}</p>
                 </div>
+                <h2>Notes</h2>
             </header>
+
+            {/* Notes */}
+            {ticket.status !== 'closed' && (
+                <button className='btn' onClick={openModal}>
+                    <FaPlus /> Add Note
+                </button>
+            )};
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                style={customStyle}
+                contentLabel='Add Note'
+            >
+                <h2>Add Note</h2>
+                <button className='btn-close' onClick={closeModal}>
+                    X
+                </button>
+                <form onSubmit={onNoteSubmit}>
+                    <div className='form-group'>
+                        <textarea
+                            name="noteText"
+                            id="noteText"
+                            className='form-control'
+                            placeholder='Note Text'
+                            value={noteText}
+                            onChange={(e) => setNoteText(e.target.value)}
+                        ></textarea>
+                    </div>
+                    <div className="form-group">
+                        <button className='btn' type='submit'>Submit</button>
+                    </div>
+                </form>
+            </Modal>
+            {notes.map((note) => (
+                <NoteItem key={note._id} note={note} />
+            ))}
+
+
             {ticket.status !== 'closed' && (
                 <button className="btn btn-block btn-danger" onClick={onTicketClose}>Close Ticket</button>
             )}
@@ -72,18 +160,3 @@ function SingleTicket() {
     )
 }
 export default SingleTicket
-
-var convert = function (s, numRows) {
-    //string (paypalishiring)
-    //    0 1 2 3 4 5 6 7 8
-    // 0  p   i   n
-    // 1  a  ls  ig
-    // 2  y a h r
-    // 3  p   i
-    // 4
-    // 5
-
-    // pinalsigyahrpi
-    // [pin][alsig][yahr][pi]
-
-}
