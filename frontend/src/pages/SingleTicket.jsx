@@ -72,3 +72,18 @@ function SingleTicket() {
     )
 }
 export default SingleTicket
+
+var convert = function (s, numRows) {
+    //string (paypalishiring)
+    //    0 1 2 3 4 5 6 7 8
+    // 0  p   i   n
+    // 1  a  ls  ig
+    // 2  y a h r
+    // 3  p   i
+    // 4
+    // 5
+
+    // pinalsigyahrpi
+    // [pin][alsig][yahr][pi]
+
+}
